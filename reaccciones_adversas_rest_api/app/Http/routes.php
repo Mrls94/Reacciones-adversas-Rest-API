@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('User/new', ['uses' => 'UsuariosController@create', 'middleware' => 'check_token']);
+Route::get('hello', ['uses' => 'UsuariosController@hello', 'middleware' => 'check_token']);

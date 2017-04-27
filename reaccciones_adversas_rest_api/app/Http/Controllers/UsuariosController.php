@@ -12,11 +12,10 @@ class UsuariosController extends Controller
 {
     //
     public function create(Request $request){
-        $usuarios_model = self::get_usuarios_model();
-        
         $usuario = new Usuario;
         $usuario->name = $request->name;
         $usuario->email = $request->email;
+        // En la columna password realmente se guarda el hash del password
         $usuario->password = $usuario->hash_password($request->password);
         if($request->role){
             $usuario->role = $request->role;

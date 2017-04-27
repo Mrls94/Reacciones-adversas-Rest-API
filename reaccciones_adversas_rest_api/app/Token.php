@@ -20,4 +20,12 @@ class Token {
         }
     }
     
+    public static function is_admin_token($token){
+        try{
+            $user = Usuario::where('token', $token)->firstOrFail();
+            return $user->role == 'admin';
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

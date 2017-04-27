@@ -29,12 +29,12 @@ class CheckToken
                 $token_date_str = $user->token_generation_date;
                 $token_date = strtotime($token_date_str);
                 $now = strtotime($now_date);
-                $time_alive = round(abs($token_date - $now) / 60); //60 minutos en una hora :O
+                $time_alive = round(abs($token_date - $now) / 60); //60 segundos en un minuto :O
                 
                 if($time_alive < self::MINUTES_TOKEN_EXPIRATION){
                     return $next($request);   
                 } else {
-                    $answer->error = "token expired";
+                    $answer->error = "token expired please login again";
                     return response(json_encode($answer), 400);
                 }
                 

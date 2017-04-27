@@ -15,6 +15,9 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        if($request->header('token')){
+         return $next($request);   
+        }
+        return response("Un-authorized", 400);
     }
 }

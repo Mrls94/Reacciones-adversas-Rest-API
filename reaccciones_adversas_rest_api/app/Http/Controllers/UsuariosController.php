@@ -16,7 +16,7 @@ class UsuariosController extends Controller
         $usuario = new Usuario;
         $usuario->name = $request->name;
         $usuario->email = $request->email;
-        $usuario->token = "this token";
+        $usuario->token = "this token 3";
         $answer = new \stdClass();
         try {
             $usuario->save();   

@@ -6,6 +6,8 @@ use App\Usuario;
 
 class Token {
     
+    const MINUTES_TOKEN_EXPIRATION = 30;
+    
     public static function generate_token(){
         $flag = true;
         while($flag){

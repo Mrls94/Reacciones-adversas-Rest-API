@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Usuario;
 use App\Token;
+use App\Helper;
 
 class UsuariosController extends Controller
 {
@@ -16,14 +17,26 @@ class UsuariosController extends Controller
         $usuario->name = $request->name;
         $usuario->email = $request->email;
         // En la columna password realmente se guarda el hash del password
-        $usuario->password = $usuario->hash_password($request->password);
+        //$usuario->password = $usuario->hash_password($request->password);
+        $password = Helper::generateStrongPassword();
+        $usuario->password = $usuario->hash_password($password);
         if($request->role){
             $usuario->role = $request->role;
         }
         $answer = new \stdClass();
         try {
-            $usuario->save();   
+            $usuario->save();
+            
+            \Mail::send('welcome_email', ['usuario' => $usuario, 'password' => $password ], function($message) use ($usuario)
+            {
+                $message->from('reacciones.adversas.correo@gmail.com', 'Reacciones Adversas');
+                $message->subject('Bienvenido a reacciones adversas');
+                $message->to($usuario->email);//->cc('bar@example.com');
+            });
+            
+            
             $answer->result = "Success";
+            $answer->password = $password;
             $status = 200;
         } catch (\Exception $e) {
             $answer->result = "Failed";
@@ -66,6 +79,29 @@ class UsuariosController extends Controller
     }
     
     public function hello(){
+        
+        $data = Usuario::first();
+        \Mail::send('welcome', ['data' => $data ], function($message)
+        {
+            $message->from('us@example.com', 'Laravel');
+        
+            $message->to('sebasmrls94@gmail.com')->cc('bar@example.com');
+        });
+        
+        /*
+        $transport = \Swift_SmtpTransport::newInstance('smtp.google.com', 25,
+            'starttls')
+            ->setUsername(getenv('MAIL_USERNAME'))
+            ->setPassword(getenv('MAIL_PASSWORD'));
+         
+        $mailer = \Swift_Mailer::newInstance($transport);
+        $message = \Swift_Message::newInstance('title', 'message', 'text/html')
+            ->setFrom(array('from@example.com' => 'name'))
+            ->setTo(array('sebasmrls94@gmail.com' => 'name'));
+         
+        $mailer->send($message);
+        */
+        
         return 'Hello';
     }
     

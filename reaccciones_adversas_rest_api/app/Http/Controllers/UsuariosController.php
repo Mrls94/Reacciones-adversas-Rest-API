@@ -16,7 +16,10 @@ class UsuariosController extends Controller
         $usuario = new Usuario;
         $usuario->name = $request->name;
         $usuario->email = $request->email;
-        $usuario->token = "this token 3";
+        $usuario->password = $usuario->hash_password($request->password);
+        if($request->role){
+            $usuario->role = $request->role;
+        }
         $answer = new \stdClass();
         try {
             $usuario->save();   
@@ -30,6 +33,12 @@ class UsuariosController extends Controller
         return response(json_encode($answer), $status);
         return json_encode($usuario);
         
+    }
+    
+    public function login(Request $request){
+        $usuarios_model = self::get_usuarios_model();
+        $email = $request->email;
+        $password = $request->password;
     }
     
     public function hello(){

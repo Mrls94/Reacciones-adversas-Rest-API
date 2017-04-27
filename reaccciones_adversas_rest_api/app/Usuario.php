@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Usuario extends Model
 {
-    //
+    // En la columna password realmente se guarda el hash del password
     protected $table = 'usuarios';
     
     public function hash_password($password){

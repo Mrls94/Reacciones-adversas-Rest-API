@@ -25,4 +25,8 @@ class Usuario extends Model
         $this->password = $password_hash;
         $this->save();
     }
+    
+    public function refresh_token(){
+        $this->token_generation_date = date(DATE_ATOM);
+    }
 }

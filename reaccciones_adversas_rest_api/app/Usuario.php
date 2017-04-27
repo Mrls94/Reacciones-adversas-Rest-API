@@ -19,4 +19,10 @@ class Usuario extends Model
     public function verify_password($password){
         return password_verify($password, $this->password);
     }
+    
+    public function change_password($new_password){
+        $password_hash = $this->hash_password($new_password);
+        $this->password = $password_hash;
+        $this->save();
+    }
 }

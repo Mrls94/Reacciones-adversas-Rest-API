@@ -65,6 +65,7 @@ class UsuariosController extends Controller
             $token = Token::generate_token();
             $user->token = $token;
             $user->token_generation_date = date(DATE_ATOM);
+            $user->last_log_in_date = date(DATE_ATOM);
             $user->save();
             $answer->result = "Success";
             $answer->token = $token;
@@ -89,6 +90,9 @@ class UsuariosController extends Controller
                 $password = Helper::generateStrongPassword();
                 
                 $usuario->change_password($password);
+                
+                $usuario->password_change_date = date(DATE_ATOM);
+                $usuario->save();
                 
                 \Mail::send('reset_password_email', ['usuario' => $usuario, 'password' => $password ], function($message) use ($usuario)
                 {

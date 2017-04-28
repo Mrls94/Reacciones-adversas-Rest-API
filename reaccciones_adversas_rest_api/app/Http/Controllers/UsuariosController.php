@@ -78,30 +78,40 @@ class UsuariosController extends Controller
         
     }
     
+    public function reset_password(Request $request){
+        $answer = new \stdClass();
+        
+        if($request->email){
+            $email = $request->email;
+            
+            try{
+                $usuario = Usuario::where('email', $email)->firstOrFail();
+                $password = Helper::generateStrongPassword();
+                
+                $usuario->change_password($password);
+                
+                \Mail::send('reset_password_email', ['usuario' => $usuario, 'password' => $password ], function($message) use ($usuario)
+                {
+                    $message->from('reacciones.adversas.correo@gmail.com', 'Reacciones Adversas');
+                    $message->subject('Ha cambiado su contraseña');
+                    $message->to($usuario->email);//->cc('bar@example.com');
+                });
+                
+                $answer->result = "Success";
+                return response(json_encode($answer), 200);
+                
+            } catch (\Exception $e){
+                $answer->result = "No such email";
+                return response(json_encode($answer), 400);
+            }
+            
+        } else{
+            $answer->result = "No email sent";
+            return response(json_encode($answer), 400);
+        }
+    }
+    
     public function hello(){
-        
-        $data = Usuario::first();
-        \Mail::send('welcome', ['data' => $data ], function($message)
-        {
-            $message->from('us@example.com', 'Laravel');
-        
-            $message->to('sebasmrls94@gmail.com')->cc('bar@example.com');
-        });
-        
-        /*
-        $transport = \Swift_SmtpTransport::newInstance('smtp.google.com', 25,
-            'starttls')
-            ->setUsername(getenv('MAIL_USERNAME'))
-            ->setPassword(getenv('MAIL_PASSWORD'));
-         
-        $mailer = \Swift_Mailer::newInstance($transport);
-        $message = \Swift_Message::newInstance('title', 'message', 'text/html')
-            ->setFrom(array('from@example.com' => 'name'))
-            ->setTo(array('sebasmrls94@gmail.com' => 'name'));
-         
-        $mailer->send($message);
-        */
-        
         return 'Hello';
     }
     

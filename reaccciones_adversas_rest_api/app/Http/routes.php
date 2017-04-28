@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::post('login', ['uses' => 'UsuariosController@login']);
+Route::post('User/resetpassword', ['uses' => 'UsuariosController@reset_password']);
 
 //Por ahora el único endpoint sin middleware es login -- middleware => check_token para el resto
 Route::post('User/new', ['uses' => 'UsuariosController@create', 'middleware' => 'check_token']);

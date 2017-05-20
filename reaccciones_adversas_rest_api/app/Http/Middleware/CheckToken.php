@@ -42,6 +42,6 @@ class CheckToken
             }
         }
         $answer->error = "Un-authorized";
-        return response($answer, 400);
+        return response(json_encode($answer), 400);
     }
 }

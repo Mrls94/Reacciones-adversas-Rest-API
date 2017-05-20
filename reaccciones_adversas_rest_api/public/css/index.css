@@ -1,0 +1,15 @@
+body {
+  background-color: #C8F4AD;
+}
+.grid {
+  height: 100%;
+}
+.image {
+  margin-top: -100px;
+}
+.column {
+  max-width: 450px;
+}
+.ui.fluid.large.teal.submit.button a {
+    color: white;
+}

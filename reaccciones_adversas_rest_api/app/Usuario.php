@@ -9,6 +9,8 @@ class Usuario extends Model
     // En la columna password realmente se guarda el hash del password
     protected $table = 'usuarios';
     
+    protected $hidden = ['password'];
+    
     public function hash_password($password){
             $options = [
                 'cost' => 12,
@@ -28,5 +30,14 @@ class Usuario extends Model
     
     public function refresh_token(){
         $this->token_generation_date = date(DATE_ATOM);
+    }
+    
+    public static function get_user_by_token($token){
+        try{
+            $user = Usuario::where('token', $token)->firstOrFail();
+            return $user;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

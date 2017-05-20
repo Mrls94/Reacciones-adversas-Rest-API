@@ -17,7 +17,11 @@ Route::get('/', function () {
 
 Route::post('login', ['uses' => 'UsuariosController@login']);
 Route::post('User/resetpassword', ['uses' => 'UsuariosController@reset_password']);
+Route::get('register/{token}', ['uses' => 'UsuariosController@register']);
+//change_password no tiene middleware para que no caduque
+//el token usado en el correo al registar el usuario
+Route::post('User/change_password', ['uses' => 'UsuariosController@change_user_password']);
 
-//Por ahora el único endpoint sin middleware es login -- middleware => check_token para el resto
+//Endpoints con middleware -- middleware => check_token
 Route::post('User/new', ['uses' => 'UsuariosController@create', 'middleware' => 'check_token']);
 Route::get('hello', ['uses' => 'UsuariosController@hello', 'middleware' => 'check_token']);

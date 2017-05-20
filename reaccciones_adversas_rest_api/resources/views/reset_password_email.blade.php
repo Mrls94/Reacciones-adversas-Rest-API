@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>Se ha cambiado su contraseña {{ $usuario->name }}</h1>
-        <h4> Tu clave es: {{ $password }} </h4>
-        <h4> Ingresa con tu correo {{ $usuario->email }}</h4>
+        <h4> Si este no fue usted puede ingresar a {{ $url }} para cambiarla de nuevo </h4>
+        <h4> Si este fue usted haga caso omiso de este correo </h4>
     </body>
 </html>

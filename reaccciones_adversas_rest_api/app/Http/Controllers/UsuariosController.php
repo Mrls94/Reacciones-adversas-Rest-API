@@ -12,6 +12,51 @@ use App\Helper;
 class UsuariosController extends Controller
 {
     //
+    public function change_user_password(Request $request){
+        $answer = new \stdClass();
+        if ($request->header('token')){
+            $token = $request->header('token');
+            $usuario = Usuario::get_user_by_token($token);
+            
+            if ($usuario != null){
+                $password = $request->password;
+                $usuario->password = $usuario->hash_password($password);
+                try{
+                    $usuario->save();
+                    $token = $usuario->token;
+                    $url = Helper::rooturl . "register/" . $token;
+                    
+                    \Mail::send('reset_password_email', ['usuario' => $usuario, 'url' => $url ], function($message) use ($usuario)
+                    {
+                        $message->from('reacciones.adversas.correo@gmail.com', 'Reacciones Adversas');
+                        $message->subject('Ha cambiado su contraseña');
+                        $message->to($usuario->email);//->cc('bar@example.com');
+                    });
+                    
+                    $answer->result = "Success";
+                    return response(json_encode($answer), 200);
+                    
+                } catch (\Exception $e){
+                    $answer->result = "No se pudo salvar";
+                    $answer->message = $e->getMessage();
+                    return response(json_encode($answer), 404);
+                }
+            }
+            
+            $answer->result = "Usuario no encontrado";
+            return response(json_encode($answer), 404);
+        } else {
+            $answer->result = "No token";
+            return response(json_encode($answer), 400);
+        }
+    }
+    
+    public function register($token){
+        $usuario = Usuario::get_user_by_token($token);
+        
+        return view('register_user', ['usuario' => $usuario]);
+    }
+    
     public function create(Request $request){
         $usuario = new Usuario;
         $usuario->name = $request->name;
@@ -20,20 +65,22 @@ class UsuariosController extends Controller
         //$usuario->password = $usuario->hash_password($request->password);
         $password = Helper::generateStrongPassword();
         $usuario->password = $usuario->hash_password($password);
+        $token = Token::generate_token();
+        $usuario->token = $token;
+        $usuario->token_generation_date = date(DATE_ATOM);
         if($request->role){
             $usuario->role = $request->role;
         }
         $answer = new \stdClass();
         try {
             $usuario->save();
-            
-            \Mail::send('welcome_email', ['usuario' => $usuario, 'password' => $password ], function($message) use ($usuario)
+            $registerurl = Helper::rooturl . "register/" . $token;
+            \Mail::send('welcome_email', ['usuario' => $usuario, 'password' => $password, 'registerurl' => $registerurl ], function($message) use ($usuario)
             {
                 $message->from('reacciones.adversas.correo@gmail.com', 'Reacciones Adversas');
                 $message->subject('Bienvenido a reacciones adversas');
                 $message->to($usuario->email);//->cc('bar@example.com');
             });
-            
             
             $answer->result = "Success";
             $answer->password = $password;
@@ -56,7 +103,7 @@ class UsuariosController extends Controller
             $user = Usuario::where('email', $email)->firstOrFail();   
         } catch (\Exception $e){
             $answer->result = "No such email";
-            $answer->message = $e->getMessage();
+            //$answer->message = $e->getMessage();
             return response(json_encode($answer), 404);
         }
         
@@ -69,6 +116,7 @@ class UsuariosController extends Controller
             $user->save();
             $answer->result = "Success";
             $answer->token = $token;
+            $answer->usario = $user;
             return response(json_encode($answer), 200);
         } else {
             $answer->result = "Wrong Password";

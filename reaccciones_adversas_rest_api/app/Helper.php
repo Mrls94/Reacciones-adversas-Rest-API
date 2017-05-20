@@ -3,6 +3,9 @@
 namespace App;
 
 class Helper {
+    
+    const rooturl = "https://reacciones-adversas-rest-api-mrls94.c9users.io/Rest_API/reaccciones_adversas_rest_api/public/";
+    
     public static function generateStrongPassword($length = 9, $add_dashes = false, $available_sets = 'luds')
     {
     	$sets = array();

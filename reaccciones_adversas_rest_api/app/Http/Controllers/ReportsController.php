@@ -234,6 +234,15 @@ class ReportsController extends Controller {
             $new_report->num_id_paciente = $report->num_id_paciente;
             $new_report->tipo_id_paciente = $report->tipo_id_paciente;
             $new_report->created_at = $report->created_at;
+            $new_report->lugar = $report->lugar;
+            $new_report->cama = $report->cama;
+            $new_report->mas_informacion_diagnosticos = $report->mas_informacion_diagnosticos;
+            $new_report->efecto_adverso = $report->efecto_adverso;
+            
+            $new_report->otros_diagnosticos = array();
+            foreach($report->otros_diagnosticos as $diagnostico){
+                $new_report->otros_diagnosticos[] = $diagnostico;
+            }
             
             $new_report->informacion_eas = array();
             foreach($report->informacion_eas as $ieas){
@@ -243,6 +252,13 @@ class ReportsController extends Controller {
                 $new_ieas->diagnostico = $ieas->diagnostico;
                 $new_ieas->desenlace_ea = $ieas->desenlace_ea;
                 $new_ieas->seriedad = $ieas->seriedad;
+                $new_ieas->fecha_inicio = $ieas->fecha_inicio;
+                $new_ieas->descripcion = $ieas->descripcion;
+                $new_ieas->despues_de_administrar_farmaco = $ieas->despues_de_administrar_farmaco;
+                $new_ieas->desaparecio_a_suspension_farmaco = $ieas->desaparecio_a_suspension_farmaco;
+                $new_ieas->misma_reaccion_a_farmaco = $ieas->misma_reaccion_a_farmaco;
+                $new_ieas->ampliar_informacion = $ieas->ampliar_informacion;
+                $new_ieas->otros_factores = $ieas->otros_factores;
                 
                 $new_report->informacion_eas[] = $new_ieas;
             }
@@ -253,7 +269,11 @@ class ReportsController extends Controller {
                 
                 $new_imed = $imed;
                 $new_imed->medicamento = $imed->medicamento;
+                $new_imed->dosis = $imed->dosis;
+                $new_imed->unidad_de_medida = $imed->unidad_de_medida;
                 $new_imed->via_de_administracion = $imed->via_de_administracion;
+                $new_imed->fecha_inicio_medicamento = $imed->fecha_inicio_medicamento;
+                $new_imed->fecha_finalizacion_medicamento = $imed->fecha_finalizacion_medicamento;
                 $new_imed->mecanismo_causa_ra = $imed->mecanismo_causa_ra;
                 
                 $new_report->informacion_medicamentos[] = $new_imed;

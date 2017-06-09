@@ -77,10 +77,10 @@ class ReportsController extends Controller {
                     $report->save();
                     
                     $informacion_ea = new InformacionEA;
-                    $informacion_ea->fecha_inicio = $request->fecha_inicio_efecto_adverso;
+                    $informacion_ea->fecha_inicio = \DateTime::createFromFormat('j-m-Y', $request->fecha_inicio_efecto_adverso);
                     $informacion_ea->id_diagnostico = $request->id_diagnostico;
                     if ($request->descripcion) $informacion_ea->descripcion = $request->descripcion;
-                    if ($request->id_desenlace_ea) $informacion_ea->id_desenlace_ea = $request->id_desenlace_eas;
+                    if ($request->id_desenlace_ea) $informacion_ea->id_desenlace_ea = $request->id_desenlace_ea;
                     $informacion_ea->id_seriedad = $request->id_seriedad;
                     $informacion_ea->despues_de_administrar_farmaco = $request->despues_de_administrar_farmaco;
                     if(!is_null($request->desaparecio_a_suspension_farmaco)) $informacion_ea->desaparecio_a_suspension_farmaco = $request->desaparecio_a_suspension_farmaco;
@@ -105,9 +105,9 @@ class ReportsController extends Controller {
                         $informacion_medicamento->dosis = $medicamento["dosis"];
                         $informacion_medicamento->unidad_de_medida = $medicamento["unidad_medida"];
                         $informacion_medicamento->id_via_de_administracion = $medicamento["id_via_de_administracion"];
-                        $informacion_medicamento->fecha_inicio_medicamento = $medicamento["fecha_inicio_medicamento"];
+                        $informacion_medicamento->fecha_inicio_medicamento = \DateTime::createFromFormat('j-m-Y', $medicamento["fecha_inicio_medicamento"]);
                         if(array_key_exists("fecha_finalizacion_medicamento", $medicamento)){
-                            $informacion_medicamento->fecha_finalizacion_medicamento = $medicamento["fecha_finalizacion_medicamento"];
+                            $informacion_medicamento->fecha_finalizacion_medicamento = \DateTime::createFromFormat('j-m-Y', $medicamento["fecha_finalizacion_medicamento"]);
                         }
                         if (array_key_exists("id_mecanismo_causa_ra", $medicamento)){
                             $informacion_medicamento->id_mecanismo_causa_ra = $medicamento["id_mecanismo_causa_ra"];   
@@ -118,8 +118,8 @@ class ReportsController extends Controller {
                             $informacion_medicamento->save();
                         } catch (\Exception $e){
                             
-                            $report->informacion_medicamentos()->delete();
-                            $report->informacion_eas()->delete();
+                            foreach($report->informacion_medicamentos as $d) $d->delete();
+                            foreach($report->informacion_eas as $d) $d->delete();
                             $report->delete();
                             
                             $answer->error = $e->getMessage();
@@ -127,23 +127,27 @@ class ReportsController extends Controller {
                         }
                     }
                     
+                    
+                    
                     if($request->otros_diagnosticos){
                         $otros_diagnosticos = $request->otros_diagnosticos;
-                        foreach($otros_diagnosticos as $id_diagnostico){
-                            $rd = new ReportDiagnostico;
-                            $rd->id_report = $report->id;
-                            $rd->id_diagnostico = $id_diagnostico;
-                            
-                            try{ $rd->save(); }
-                            catch (\Exception $e){
-                            $report->otros_diagnosticos->delete();
-                            $report->informacion_medicamentos->delete();
-                            $report->informacion_eas->delete();
-                            $report->delete();
-                            
-                            $answer->error = $e->getMessage();
-                            return response(json_encode($answer, JSON_UNESCAPED_UNICODE), 402);
-                            }
+                        if($otros_diagnosticos[0]){
+                            foreach($otros_diagnosticos as $id_diagnostico){
+                                $rd = new ReportDiagnostico;
+                                $rd->id_report = $report->id;
+                                $rd->id_diagnostico = $id_diagnostico;
+                                
+                                try{ $rd->save(); }
+                                catch (\Exception $e){
+                                foreach($report->otros_diagnosticos as $d) $d->delete();
+                                foreach($report->informacion_medicamentos as $d) $d->delete();
+                                foreach($report->informacion_eas as $d) $d->delete();
+                                $report->delete();
+                                
+                                $answer->error = $e->getMessage();
+                                return response(json_encode($answer, JSON_UNESCAPED_UNICODE), 402);
+                                }
+                            }   
                         }
                     }
                     

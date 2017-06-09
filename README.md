@@ -14,4 +14,8 @@
 ⋅⋅* confirmar creación de base de datos
 5. $php artisan migrate
 6. $php artisan db:seed
-7. $php artisan serve --port=3000&
+7. $php artisan serve --port=3000& ``` Al agregarle el & al final de commando se corren en background el proceso ```
+
+### Parar servicio
+1. $lsof -i :3000 ``` Listar procesos escuchando en puerto 3000 ```
+2. kill {numero de pid del proceso} ``` kill -9 {pid}  para forzarlo```

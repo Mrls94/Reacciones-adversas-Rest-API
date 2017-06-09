@@ -12,3 +12,6 @@
 ⋅⋅* confirmar
 ⋅⋅* ```> show databases;```
 ⋅⋅* confirmar creación de base de datos
+5. $php artisan migrate
+6. $php artisan db:seed
+7. $php artisan serve

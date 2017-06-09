@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Bienvenido</title>
+        <title>Bienvenido a MED Notify - Sistema de Reacciones Adversas</title>
     </head>
     <body>
-        <h1>!Bienvenido {{ $usuario->name }}!</h1>
-        <h4> Sigue el siguiente enlace para establecer tu contraseña: </h4>
+        <!--<img class="ui small image logo" src="../images/ma-logo.png">-->
+        <h1>Bienvenido, {{ $usuario->name }}</h1>
+        <h4> Accede al siguiente enlace para establecer tu contraseña: </h4>
         <h4> {{ $registerurl }} </h4>
-        <!--
-        <h4> Tu clave es: {{ $password }} </h4>
-        <h4> Ingresa con tu correo {{ $usuario->email }}</h4>
-        -->
     </body>
 </html>

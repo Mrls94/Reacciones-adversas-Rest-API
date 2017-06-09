@@ -11,6 +11,14 @@ class Usuario extends Model
     
     protected $hidden = ['password'];
     
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+    
+    public function reports(){
+        return $this->hasMany('App\Report', 'id_usuario');
+    }
+    
     public function hash_password($password){
             $options = [
                 'cost' => 12,
@@ -30,6 +38,7 @@ class Usuario extends Model
     
     public function refresh_token(){
         $this->token_generation_date = date(DATE_ATOM);
+        $this->save();
     }
     
     public static function get_user_by_token($token){
@@ -39,5 +48,18 @@ class Usuario extends Model
         } catch (\Exception $e) {
             return null;
         }
+    }
+    
+    public static function get_admin_emails(){
+        $admins = Usuario::where('role', 'admin')
+                            ->where('active', 1)
+                            ->get();
+        
+        $admin_emails = array();
+        foreach($admins as $admin){
+            $admin_emails[] = $admin->email;
+        }
+        
+        return $admin_emails;
     }
 }

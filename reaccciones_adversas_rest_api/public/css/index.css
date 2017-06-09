@@ -1,5 +1,5 @@
 body {
-  background-color: #C8F4AD;
+  background-color: #E2E6E8;
 }
 .grid {
   height: 100%;
@@ -10,6 +10,14 @@ body {
 .column {
   max-width: 450px;
 }
-.ui.fluid.large.teal.submit.button a {
-    color: white;
+.ui.fluid.large.submit.button{
+  background-color: #1B5FAA;
+  color: #fff
+}
+button{
+  background-color: #1B5FAA;
+  color: #fff;
+}
+.content{
+  color: #1B5FAA;;
 }

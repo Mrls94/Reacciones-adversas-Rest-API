@@ -30,6 +30,7 @@
                 display: inline-block;
             }
 
+
             .title {
                 font-size: 96px;
             }

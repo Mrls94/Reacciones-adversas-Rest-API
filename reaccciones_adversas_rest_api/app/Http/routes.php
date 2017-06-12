@@ -14,7 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('hello', ['uses' => 'UsuariosController@hello']);
 Route::post('login', ['uses' => 'UsuariosController@login']);
 Route::post('User/resetpassword', ['uses' => 'UsuariosController@reset_password']);
 Route::get('register/{token}', ['uses' => 'UsuariosController@register']);
@@ -32,7 +32,6 @@ Route::delete('Users/{id}', ['uses'=> 'UsuariosController@active_user','middlewa
 Route::get('Users',['uses'=> 'UsuariosController@get_users','middleware' => 'check_token']);
 Route::post('User/new', ['uses' => 'UsuariosController@create', 'middleware' => 'check_token']);
 Route::get('User/token_status', ['uses' => 'UsuariosController@get_token_status', 'middleware' => 'check_token']);
-Route::get('hello', ['uses' => 'UsuariosController@hello', 'middleware' => 'check_token']);
 Route::get('Medicamentos', ['uses' => 'MedicamentosController@get_medicamentos', 'middleware' => 'check_token']);
 Route::post('Medicamentos', ['uses' => 'MedicamentosController@update_medicamentos', 'middleware' => 'check_token']);
 Route::get('Diagnosticos', ['uses' => 'DiagnosticosController@get_diagnosticos', 'middleware' => 'check_token']);
